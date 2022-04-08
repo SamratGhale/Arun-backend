@@ -9,8 +9,9 @@ module.exports = {
   register: {
     payload: Joi.object({
       username: Joi.string().optional().description('user email'),
-      email: Joi.string().optional().description('user email'),
-      password: Joi.string().optional().description('user password'),
+      email: Joi.string().description('user email'),
+      password: Joi.string().description('user password'),
+      is_admin: Joi.boolean().description('is user an admin'),
     }),
   },
   auth: {
@@ -22,6 +23,7 @@ module.exports = {
     payload: Joi.object({
       email: Joi.string().optional().description('user email'),
       password: Joi.string().optional().description('user password'),
+      is_admin: Joi.string().optional().description('is user an admin'),
     }),
   },
 

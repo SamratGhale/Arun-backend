@@ -67,7 +67,7 @@ const Seller = {
     },
 
     async register(data) {
-        var { username, email, password } = data;
+        var { username, email, password, is_admin } = data;
 
         if (!(username && email && password)) {
             throw "All input is required";
@@ -86,6 +86,7 @@ const Seller = {
             username: username,
             registered: false,
             is_archived: false,
+            is_admin: is_admin
         });
         const token = jwt.sign(
             { user_id: user._id, email,  registered: user.registered },

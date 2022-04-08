@@ -7,6 +7,7 @@ const schema = {
   password: { type: String, required: true },
   registered: { type: Boolean, required: true },
   is_archived: { type: Boolean, required: true },
+  is_admin: {type: Boolean, required: true, default: false}
 };
 
 const SellerSchema = mongoose.Schema(schema, {
