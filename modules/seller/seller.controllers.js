@@ -27,12 +27,9 @@ const Seller = {
         }
         return { user };
     },
-    async auth(request) {
+    async auth(token) {
         try {
-            const token =
-                request.params.token || request.headers.access_token || request.cookies.access_token;
             const { user } = await Seller.validateToken(token);
-
             delete user.password;
             return {
                 user,
@@ -89,7 +86,7 @@ const Seller = {
             is_admin: is_admin
         });
         const token = jwt.sign(
-            { user_id: user._id, email,  registered: user.registered },
+            { user_id: user._id, email, registered: user.registered },
             salt
         );
         user.token = token;
@@ -105,7 +102,7 @@ const Seller = {
             if (user) {
                 if (await bcrypt.compare(password, user.password)) {
                     const token = jwt.sign(
-                        { user_id: user._id, email},
+                        { user_id: user._id, email },
                         process.env.TOKEN_KEY,
                     );
                     return { user, token };
@@ -143,5 +140,9 @@ module.exports = {
     validateToken: (req) => Seller.validateToken(req.params.token),
     update: (req) => Seller.update(req),
     changePassword: (req) => Seller.changePassword(req),
-    auth: (req) => Seller.auth(req),
+    auth: (request) => {
+        const token =
+            request.params.token || request.headers.access_token || request.cookies.access_token;
+        Seller.auth(token)
+    },
 };

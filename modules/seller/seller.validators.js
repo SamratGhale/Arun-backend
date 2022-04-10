@@ -23,7 +23,7 @@ module.exports = {
     payload: Joi.object({
       email: Joi.string().optional().description('user email'),
       password: Joi.string().optional().description('user password'),
-      is_admin: Joi.string().optional().description('is user an admin'),
+      is_admin: Joi.boolean().optional().description('is user an admin'),
     }),
   },
 
@@ -43,8 +43,10 @@ module.exports = {
       id: Joi.objectId(),
     }),
     payload: Joi.object({
-      email: Joi.string().optional().description('user email'),
-      password: Joi.string().optional().description('user password'),
+      username: Joi.string().optional().description('user email'),
+      email: Joi.string().description('user email'),
+      password: Joi.string().description('user password'),
+      is_admin: Joi.boolean().description('is user an admin'),
     }),
   },
 };

@@ -54,7 +54,7 @@ app.connectServer(server)
 
 const swaggerOptions = {
   info: {
-    title: "artha API",
+    title: "room API",
     version: process.env.npm_package_version,
     description: process.env.npm_package_description,
   },
