@@ -1,5 +1,5 @@
-const controllers = require('./seller.controllers');
-const validators = require('./seller.validators');
+const controllers = require('./users.controllers');
+const validators = require('./users.validators');
 
 const routes = {
     list: {
@@ -9,7 +9,7 @@ const routes = {
     },
     login: {
         method: 'POST',
-        path: '',
+        path: '/login',
         description: 'Login using username and password',
         uploadPayload: {
             output: 'stream',
@@ -46,10 +46,21 @@ const routes = {
         path: '/{id}',
         description: 'Archive seller',
     },
+    approve: {
+        method: 'PUT',
+        path: '/approve/{id}',
+        description: 'approve seller',
+    },
     update: {
         method: 'POST',
         path: '/{id}/update',
         description: 'Update seller',
+        uploadPayload: {
+            output: 'stream',
+            parse: true,
+            multipart: true,
+            allow: 'multipart/form-data',
+        },
     },
     findById: {
         method: 'GET',
@@ -60,7 +71,7 @@ const routes = {
 
 function register(app) {
     app.register({
-        name: 'seller',
+        name: 'users',
         routes,
         validators,
         controllers,

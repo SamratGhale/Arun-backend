@@ -1,7 +1,7 @@
-const { Seller } = require("./seller/seller.controllers");
+const { User } = require("./users/users.controllers");
 const { Room } = require("./room/room.controllers");
 
 module.exports = {
-  Seller,
+  User,
   Room
 };

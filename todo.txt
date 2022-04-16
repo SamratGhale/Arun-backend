@@ -1,0 +1,2 @@
+-create tables
+-convert all the mongodb code to mysql code

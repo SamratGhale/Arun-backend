@@ -1,7 +1,7 @@
-const Seller= require('./seller/seller.routes')
+const User = require('./users/users.routes')
 const Room= require('./room/room.routes')
 
 module.exports = {
-   Seller,
+   User,
    Room
 }

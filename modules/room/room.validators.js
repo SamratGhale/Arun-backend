@@ -3,7 +3,6 @@ const Joi = require('joi-oid');
 module.exports = {
     register: {
         payload: Joi.object({
-            token: Joi.string().optional().description('Seller token'),
             description : Joi.string().optional().description('Room description'),
             price: Joi.number().optional().description("Room's price"),
             room_count: Joi.number().optional().description("Number of rooms"),

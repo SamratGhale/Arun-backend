@@ -1,8 +1,8 @@
-const mongoose = require('mongoose');
 const Hapi = require('@hapi/hapi');
 const inert = require('@hapi/inert');
 const Vision = require('@hapi/vision');
 const HapiSwagger = require('hapi-swagger');
+const HapiMysql = require('hapi-plugin-mysql')
 const app = require('./app');
 const modules = require('./modules/routes');
 
@@ -16,13 +16,6 @@ function registerFeats() {
 
 
 const port = 4001;
-
-const db = process.env.DATABASE_URL 
-
-mongoose.connect(db, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
 const server = new Hapi.Server({
   port,
   router: {
@@ -73,7 +66,7 @@ const swaggerOptions = {
  * Starts the server.
  */
 async function startServer() {
-   registerFeats();
+  registerFeats();
   await server.register([
     inert,
     Vision,
@@ -81,6 +74,15 @@ async function startServer() {
       plugin: HapiSwagger,
       options: swaggerOptions,
     },
+    {
+      plugin: HapiMysql,
+      options: {
+        host: process.env.MYSQL_HOST,
+        user: process.env.MYSQL_USERNAME,
+        password: process.env.MYSQL_PASSWORD,
+        database: process.env.MYSQL_DATABASE
+      }
+    }
   ]);
 
   server.route({
