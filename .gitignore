@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/room_images
 /.pnp
 .pnp.js
 
