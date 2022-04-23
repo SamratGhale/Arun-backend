@@ -106,13 +106,9 @@ class App {
       return result;
       // return this.database.processResponse(result);
     } catch (error) {
-      if (process.env.ENV_TYPE === 'development')
-        return h
-          .response({ statusCode: error.code, error: 'Server Error', message: error.message })
-          .code(500);
       return h
         .response({ statusCode: error.code, error: 'Server Error', message: error.message })
-        .code(error.code || 500);
+        .code(500);
     }
   }
 
@@ -199,7 +195,7 @@ class App {
       this.registerController(name, operationName, controllers[operationName]);
       if (Array.isArray(route)) {
         route = {
-          cors:true,
+          cors: true,
           method: route[0],
           path: route[1],
           description: route[2],

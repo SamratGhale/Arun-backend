@@ -133,7 +133,7 @@ const User= {
     },
 
     async archive(db, id) {
-        const user = await db.query(`update users set is_archived =  true where user_id = '${id}';`);
+        const user = await db.query(`update users set is_archived =  !is_archived where user_id = '${id}';`);
         if(user.changedRows > 0){
             return {message: 'user archived successfully'}
         }
@@ -142,7 +142,7 @@ const User= {
         }
     },
     async approve(db, id) {
-        const user = await db.query(`update users set is_registered =  true where user_id = '${id}';`);
+        const user = await db.query(`update users set is_registered = !is_registered where user_id = '${id}';`);
         if(user.changedRows > 0){
             return {message: 'user registered successfully'}
         }
@@ -164,9 +164,9 @@ module.exports = {
     validateToken: (req) => User.validateToken(req.app.db,req.params.token),
     update:        (req) => User.update(req.app.db,req.payload, req.params.id),
     changePassword:(req) => User.changePassword(req.app.db,req),
-    auth:          (request) => {
+    auth:          (req) => {
         const token =
-            request.params.token || request.headers.access_token || request.cookies.access_token;
-        User.validateToken(req.db, token)
+            req.params.token || req.headers.access_token || req.cookies.access_token;
+        return User.validateToken(req.app.db, token)
     },
 };

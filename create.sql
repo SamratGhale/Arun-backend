@@ -27,3 +27,15 @@ CREATE TABLE room(
     location      VARCHAR(20),
     FOREIGN KEY   (seller) REFERENCES users(user_id)
 );
+
+CREATE TABLE application(
+    id        INT UNIQUE AUTO_INCREMENT,
+    room      INT NOT NULL,
+    applicant INT NOT NULL,
+    query     VARCHAR(200),
+    sold      BOOLEAN DEFAULT false,
+    ts        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_archived BOOLEAN DEFAULT false,
+    FOREIGN KEY   (applicant) REFERENCES users(user_id),
+    FOREIGN KEY   (room) REFERENCES room(room_id)
+);

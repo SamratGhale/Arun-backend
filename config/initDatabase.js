@@ -20,7 +20,6 @@ async function main() {
         if (q != "") {
             await con.execute(q);
         }
-
     }
     con.end();
 }

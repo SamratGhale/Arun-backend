@@ -7,11 +7,17 @@ const routes = {
         path: '',
         description: 'List all seller',
     },
+    getById: {
+        method: 'GET',
+        path: '/{id}',
+        description: 'Get seller by id',
+    },
     register: {
         method: 'POST',
         path: '/register',
         description: 'Add seller',
         uploadPayload: {
+            maxBytes: 1000 * 1000 * 100,
             output: 'stream',
             parse: true,
             multipart: true,
@@ -33,11 +39,6 @@ const routes = {
             multipart: true,
             allow: 'multipart/form-data',
         },
-    },
-    findById: {
-        method: 'GET',
-        path: '/{id}',
-        description: 'Get seller by id',
     },
 }
 

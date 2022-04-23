@@ -1,2 +1,2 @@
--create tables
--convert all the mongodb code to mysql code
+- check all the controllers of users 
+- add image in room
