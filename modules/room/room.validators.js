@@ -3,7 +3,17 @@ const Joi = require('joi-oid');
 module.exports = {
     getById:{
         params:Joi.object({
-            id: Joi.number().description('get room details and applications by id')
+            id: Joi.number().description('Room id')
+        })
+    },
+    archive:{
+        params:Joi.object({
+            id: Joi.number().description('Room Id')
+        })
+    },
+    available:{
+        params:Joi.object({
+            id: Joi.number().description('Room Id')
         })
     },
     register: {

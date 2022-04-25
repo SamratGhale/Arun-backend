@@ -29,6 +29,16 @@ const routes = {
         path: '/{id}',
         description: 'Archive seller',
     },
+    applications: {
+        method: 'GET',
+        path: '/applications',
+        description: 'Get all applications by me',
+    },
+    available: {
+        method: 'PUT',
+        path: '/available/{id}',
+        description: 'Change availability seller',
+    },
     update: {
         method: 'POST',
         path: '/{id}/update',

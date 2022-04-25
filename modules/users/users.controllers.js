@@ -1,3 +1,4 @@
+var fs = require('fs')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
@@ -17,28 +18,52 @@ const User= {
         return res[0];
     },
 
-    async update(db, data, id) {
+    async update(db, data, id, token) {
 
-        const { username, email, phone, is_admin } = data;
+        const { username, email, phone} = data;
 
-        const p = await db.query(`select * from users where phone = '${phone}'`);
-        if (p.length >0) {
-            if(p[0].user_id != id){
-                throw { message: "email or phone already exists!", code: 400 };
-            }
-        }
-        const e = await db.query(`select * from users where email = '${email}'`);
-        if (e.length >0) {
-            if(e[0].user_id != id){
-                throw { message: "email or phone already exists!", code: 400 };
-            }
+        const user = await this.validateToken(db, token);
+
+        if(!user.is_admin && (user.user_id == id)){
+            throw {message: "Only admin can update different users", code: 404};
         }
 
         try {
-            const res = await db.query(`update users set username = '${username}', is_admin = ${is_admin}, email = '${email}', phone='${phone}' where user_id = ${id};`);
+            const res = await db.query(`update users set username = '${username}', is_admin = is_admin, email = '${email}', phone='${phone}' where user_id = ${id};`);
             return { message: 'user updated successfully ' }
         } catch (err) {
-            throw { message: "couldn't update user", code: 400 };
+            console.log(err);
+            throw { message: err.sqlMessage, code: 400 };
+        }
+    },
+
+    async changeProfilePic(db, token , data) {
+        const {image} = data;
+        const user = await this.validateToken(db, token);
+        if (user.length === 0) {
+            throw { message: "Invalid token please log in and try again", code: 400 };
+        }
+        try{
+            const dir =    `./profile_pics/${user.user_id}`;
+
+            if(!fs.existsSync(dir)){
+                fs.mkdirSync(dir, {recursive: true});
+            }
+            else{
+                fs.readdirSync(dir).forEach(f => fs.rmSync(`${dir}/${f}`)); 
+            }
+            const ext = image.hapi.filename.split('.').at(-1);
+            if (!['img', 'jpg', 'png', 'gif'].includes(ext)) {
+                throw { message: "Image format not valid please try again!", code: 404 };
+            }
+            fs.writeFileSync(`${dir}/${image.hapi.filename}`, image._data, err => {
+                throw { message: "couldn't upload image please try again", code: 404 };
+            })
+            return {message: "profile picture change successfully"}
+        }
+        catch(err){
+            console.log(err)
+            throw {message: "Couldn't add profile pic ", code :404};
         }
     },
 
@@ -50,6 +75,7 @@ const User= {
         if (user.length == 0) {
             throw { message: "Token not correct please login and try again!", code: 400 };
         }
+        user[0].profile_pic = fs.readdirSync(`./profile_pics/${user[0].user_id}`);
         return  user[0] ;
     },
     async changePassword(db,req) {
@@ -162,11 +188,20 @@ module.exports = {
     approve:       (req) => User.approve(req.app.db, req.params.id),
     findById:      (req) => User.findById(req.app.db, req.params.id),
     validateToken: (req) => User.validateToken(req.app.db,req.params.token),
-    update:        (req) => User.update(req.app.db,req.payload, req.params.id),
+    update:        (req) => {
+        const token =
+            req.params.token || req.headers.access_token;
+        return User.update(req.app.db,req.payload, req.params.id, token)
+    },
     changePassword:(req) => User.changePassword(req.app.db,req),
     auth:          (req) => {
         const token =
             req.params.token || req.headers.access_token || req.cookies.access_token;
         return User.validateToken(req.app.db, token)
+    },
+    changeProfilePic:          (req) => {
+        const token =
+            req.params.token || req.headers.access_token || req.cookies.access_token;
+        return User.changeProfilePic(req.app.db, token, req.payload)
     },
 };

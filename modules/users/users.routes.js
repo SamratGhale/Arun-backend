@@ -18,7 +18,7 @@ const routes = {
             allow: 'multipart/form-data',
         },
     },
-    auth: ['GET', '/auth/{token}', 'Get the token data'],
+    auth: {method: 'GET', path: '/auth/{token}', description: 'Get the token data'},
     register: {
         method: 'POST',
         path: '/register',
@@ -50,6 +50,7 @@ const routes = {
         method: 'PUT',
         path: '/approve/{id}',
         description: 'approve seller',
+        is_admin: true,
     },
     update: {
         method: 'POST',
@@ -66,6 +67,17 @@ const routes = {
         method: 'GET',
         path: '/{id}',
         description: 'Get seller by id',
+    },
+    changeProfilePic: {
+        method: 'POST',
+        path: '/changeprofile',
+        description: 'Add or change profile picture',
+        uploadPayload: {
+            output: 'stream',
+            parse: true,
+            multipart: true,
+            allow: 'multipart/form-data',
+        },
     },
 };
 

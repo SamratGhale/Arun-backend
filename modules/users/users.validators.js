@@ -34,6 +34,11 @@ module.exports = {
       newPassword: Joi.string().description('user password'),
     }),
   },
+  changeProfilePic:{
+    payload:Joi.object({
+      image: Joi.any().meta({ swaggerType: 'file' }).description('new profile pic')
+    })
+  },
   archive: {
     params: Joi.object({
       id: Joi.number(),
@@ -52,7 +57,6 @@ module.exports = {
       username: Joi.string().optional().description('user email'),
       phone: Joi.string().optional().description('user phone'),
       email: Joi.string().description('user email'),
-      is_admin: Joi.boolean().description('is user an admin'),
     }),
   },
 };
