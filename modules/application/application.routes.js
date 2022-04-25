@@ -13,6 +13,11 @@ const routes = {
         path: '/approve/{id}',
         description: 'approve a room',
     },
+    archive: {
+        method: 'DELETE',
+        path: '/{id}',
+        description: 'archive an application',
+    },
     register: {
         method: 'POST',
         path: '/register',

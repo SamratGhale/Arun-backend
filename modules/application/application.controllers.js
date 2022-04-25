@@ -36,6 +36,30 @@ const Application={
       console.log(err);
       throw { message: 'Couldnt apply for the room please try again', code: 400 };
     }
+  },
+  async archive(db, id, token ){
+        const user = await User.User.validateToken(db, token);
+        if (user.length === 0) {
+            throw { message: "Invalid token please log in and try again", code: 400 };
+        }
+
+        const application = await db.query(`select * from application where id = ${id}`);
+
+        if(application.length ===0){
+            throw { message: "appliation dosen't exist", code :404};
+        }
+
+        if(!user.is_admin && application[0].applcant != user.user_id){
+            throw { message: "Only admin can archive other's room", code :404};
+        }
+
+        const req = await db.query(`update application set is_archived =  !is_archived where id = '${id}';`);
+        if (req.changedRows > 0) {
+            return { message: 'applcation archived successfully' }
+        }
+        else {
+            throw { message: 'failed to update application', code :404};
+        }
   }
 }
 
@@ -44,8 +68,12 @@ module.exports={
   list: (req)=>Application.list(req.app.db),
   approve: (req)=>Application.approve(req.app.db, req.params.id),
   register:(req)=>{
-    console.log(req.headers)
     const token = req.params.token || req.headers.access_token;
     return Application.register(req.app.db, token, req.payload, req.payload);
+  },
+  archive:(req)=>{
+    const token = req.params.token || req.headers.access_token;
+    console.log(token)
+    return Application.archive(req.app.db,req.params.id, token);
   }
 }

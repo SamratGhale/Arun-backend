@@ -2,7 +2,7 @@ var fs = require('fs')
 const User = require("../users/users.controllers");
 const Room = {
     async list(db) {
-        const res = await db.query('select r.description,u.user_id, u.username,u.phone,r.room_count, r.is_available, r.is_verified, r.is_archived, r.price, r.location, r.room_id ,count(id) as app_count from room r left outer join application a on r.room_id = a.room inner join users u on u.user_id = r.seller group by r.room_id');
+        const res = await db.query('select r.description,u.user_id, u.username,u.phone,r.room_count, r.is_available, r.is_verified, r.is_archived, r.price, r.location, r.room_id ,count(id) as app_count from room r left outer join application a on r.room_id = a.room inner join users u on u.user_id = r.seller  group by r.room_id ');
         console.log(res)
         res.forEach((room, i) => {
             res[i].files = fs.readdirSync(`./room_images/${room.room_id}`);
@@ -15,7 +15,7 @@ const Room = {
         if (user.length === 0) {
             throw { message: "Invalid token please log in and try again", code: 400 };
         }
-        const res = await db.query(`select * from application where applicant = ${user.user_id} and is_archived = false`);
+        const res = await db.query(`select * from application where applicant = ${user.user_id} `);
         return res;
     },
     async getById(db, id, token) {
@@ -33,7 +33,7 @@ const Room = {
         poster[0].files = fs.readdirSync(`./room_images/${id}`);
 
         if (user.user_id == poster[0].seller) {
-            const applies = await db.query(`select * from application a inner join users u on a.applicant = u.user_id where room = ${id}`);
+            const applies = await db.query(`select *, a.is_archived as app_archived from application a inner join users u on a.applicant = u.user_id where room = ${id}`);
             return { room: poster[0], applies }
         } else {
             return { room: poster[0] };

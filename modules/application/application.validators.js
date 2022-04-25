@@ -11,5 +11,10 @@ module.exports = {
         params: Joi.object({
             id: Joi.number().description("Application's id"),
         }),
+    },
+    archive: {
+        params: Joi.object({
+            id: Joi.number().description("Application's id"),
+        }),
     }
 }

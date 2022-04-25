@@ -8,7 +8,7 @@ const User= {
         return await this.register(db, data);
     },
     async list(db) {
-        return await db.query("select user_id, email, username, is_registered, is_admin, is_archived, phone from users;");
+        return await db.query("select user_id, u.email, u.username, u.is_registered, u.is_admin, u.is_archived, phone, count(distinct(room_id)) as room_count , count(distinct(id)) app_count from room r left join application a on r.room_id = a.room  right join users u on u.user_id = r.seller group by seller;");
     },
     async findById(db,_id) {
         const res = await db.query(`select * from users where user_id = ${_id} ;`);
